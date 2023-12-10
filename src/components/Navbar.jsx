@@ -11,7 +11,7 @@ function Navbar() {
   const Context = useContext(StateContext);
   const { state, dispatch } = Context;
   return (
-    <header className="h-16 w-full bg-[#eff1f1] flex items-center justify-center sticky top-0 left-0">
+    <header className="h-16 w-full bg-[#eff1f1] flex items-center justify-center sticky top-0 left-0 z-20">
       <div className="w-[90%] md:w-[95%] lg:w-[83%]  flex items-center  justify-between">
         <div className="flex items-center ">
           <div className="logo">
@@ -24,7 +24,7 @@ function Navbar() {
                 type="text"
                 name=""
                 id=""
-                className="border-none outline-none bg-transparent"
+                className="bg-transparent border-none outline-none"
               />
               <Arrow />
             </div>
@@ -35,8 +35,8 @@ function Navbar() {
                 </div>
             </div>
           </div>
-          <div className=" ml-1 p-1">
-            <div className="button flex text-sm gap-2 items-center font-semibold">
+          <div className="p-1 ml-1 ">
+            <div className="flex items-center gap-2 text-sm font-semibold button">
               ENGLISH
               <div
                 onClick={() => handleLanguageToggle(dispatch)}
@@ -50,11 +50,11 @@ function Navbar() {
             </div>
           </div>
         </div>
-        <div className="flex mr-2 gap-3 items-center">
-          <button className="cursor-pointer font-semibold border-b-2 border-black h-7 flex items-center">
+        <div className="flex items-center gap-3 mr-2">
+          <button className="flex items-center font-semibold border-b-2 border-black cursor-pointer h-7">
             Login
           </button>
-          <button className="cursor-pointer py-1 px-3 rounded-full bg-slate-300 flex items-center uppercase border-4 border-blue-500">
+          <button className="flex items-center px-3 py-1 uppercase border-4 border-blue-500 rounded-full cursor-pointer bg-slate-300">
             <TiPlus className="text-lg" />
             <p>Sell</p>
           </button>
