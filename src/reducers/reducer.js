@@ -1,5 +1,7 @@
 const TYPE = {
   languageToggle: "languageToggle",
+  loginModalOpen: "loginModalOpen",
+  loginModalClose: "loginModalClose",
 };
 const reducer = (state, action) => {
   switch (action.type) {
@@ -7,6 +9,16 @@ const reducer = (state, action) => {
       return {
         ...state,
         languageToggle: !state.languageToggle,
+      };
+    case TYPE.loginModalOpen:
+      return {
+        ...state,
+        loginModal: true,
+      };
+    case TYPE.loginModalClose:
+      return {
+        ...state,
+        loginModal: false,
       };
   }
 };

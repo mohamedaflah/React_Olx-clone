@@ -1,4 +1,5 @@
 const initialsValues={
-    languageToggle:false
+    languageToggle:false,
+    loginModal:false,
 }
 export {initialsValues}

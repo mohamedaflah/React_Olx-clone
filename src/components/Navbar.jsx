@@ -7,6 +7,7 @@ import { handleLanguageToggle } from "../handleFunctions/navbarhandle";
 import { StateContext } from "../App";
 import { useContext } from "react";
 import { IoSearch } from "react-icons/io5";
+import LoginModal from "./LoginModal";
 function Navbar() {
   const Context = useContext(StateContext);
   const { state, dispatch } = Context;
@@ -51,9 +52,10 @@ function Navbar() {
           </div>
         </div>
         <div className="flex items-center gap-3 mr-2">
-          <button className="flex items-center font-semibold border-b-2 border-black cursor-pointer h-7">
+          {/* <button className="flex items-center font-semibold border-b-2 border-black cursor-pointer h-7">
             Login
-          </button>
+          </button> */}
+          <LoginModal/>
           <button className="flex items-center px-3 py-1 uppercase border-4 border-blue-500 rounded-full cursor-pointer bg-slate-300">
             <TiPlus className="text-lg" />
             <p>Sell</p>

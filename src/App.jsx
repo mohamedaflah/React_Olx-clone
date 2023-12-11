@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import { reducer } from "./reducers/reducer";
 import { initialsValues } from "./reducers/initiial";
 import Cards from "./components/Cards";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 const StateContext = createContext();
 function App() {
   const [state, dispatch] = useReducer(reducer, initialsValues);
@@ -15,7 +16,11 @@ function App() {
       <main>
         <Navbar />
         {/* <div className="px-2 bg-black w-[90%] md:w-[95%] lg:w-[83%] mx-auto"> */}
-        <Cards/>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Cards />} />
+          </Routes>
+        </Router>
         {/* </div> */}
       </main>
     </StateContext.Provider>
