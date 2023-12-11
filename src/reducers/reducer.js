@@ -13,12 +13,7 @@ const reducer = (state, action) => {
     case TYPE.loginModalOpen:
       return {
         ...state,
-        loginModal: true,
-      };
-    case TYPE.loginModalClose:
-      return {
-        ...state,
-        loginModal: false,
+        loginModal: action.payload,
       };
   }
 };

@@ -7,6 +7,7 @@ import { AuthenticationContext } from "./store/AuthContext";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./config/firebaseconfig";
+import Sell from "./components/Sell";
 const StateContext = createContext();
 function App() {
   const [state, dispatch] = useReducer(reducer, initialsValues);
@@ -26,14 +27,16 @@ function App() {
     state,
     dispatch,
   };
+
   return (
-    <StateContext.Provider value={contextValues}>
+    <StateContext.Provider value={{contextValues,dispatch,state}}>
       <main>
-        <Navbar />
         {/* <div className="px-2 bg-black w-[90%] md:w-[95%] lg:w-[83%] mx-auto"> */}
         <Router>
+        <Navbar />
           <Routes>
             <Route path="/" element={<Cards />} />
+            <Route path="/users/sell/" element={<Sell/>}/>
           </Routes>
         </Router>
         {/* </div> */}

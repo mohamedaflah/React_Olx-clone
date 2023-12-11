@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import DefaultModalBody from "./defaulModal";
 import LoginBody from "./LoginBody";
+import { StateContext } from "../App";
+import { TYPE } from "../reducers/reducer";
 const LoginModal = () => {
-  const [open, setOpen] = useState(false);
+  const {dispatch,state}=useContext(StateContext)
   const [login, setLogin] = useState(false);
-  const onOpenModal = () => setOpen(true);
+  const onOpenModal = () => {
+    dispatch({type:TYPE.loginModalOpen,payload:true})
+  };
   const onCloseModal = () => {
-    setOpen(false);
+    dispatch({type:TYPE.loginModalOpen,payload:false})
     setLogin(false)
   };
   const customStyles = {
@@ -25,7 +29,7 @@ const LoginModal = () => {
       >
         Login
       </button>
-      <Modal open={open} onClose={onCloseModal} center styles={customStyles}>
+      <Modal open={state.loginModal} onClose={onCloseModal} center styles={customStyles}>
         {!login ? (
           <DefaultModalBody setLogin={setLogin} />
         ) : (
