@@ -21,7 +21,7 @@ function Navbar() {
   const [profile, setOpenProfile] = useState(false);
   const location = useLocation();
   const handleSell = () => {
-    if (user) {
+    if (localStorage.getItem("authUser")) {
       navigate("/users/sell");
     } else {
       Context.dispatch({ type: TYPE.loginModalOpen, payload: true });
@@ -79,7 +79,7 @@ function Navbar() {
               </div>
             </div>
           </div>
-          {user && (
+          {localStorage.getItem("authUser") && (
             <div className="flex items-center justify-start p-0 cursor-pointer text-1xl">
               <FaUserAlt />{" "}
               <div
@@ -96,13 +96,15 @@ function Navbar() {
                   className="absolute   w-40 p-2 top-16 bg-[#494747d1] h-36  z-10 items-start justify-start"
                   style={{ transition: ".4s ease" }}
                 >
-                  <div className="border-b">{user}</div>
+                  <div className="border-b">{JSON.parse(localStorage.getItem('authUser')).displayName || user}</div>
                   <div>
                     <button
                       className="border-b border-black cursor-pointer"
                       onClick={() => {
                         signOut(auth).then(() => {
                           setUser(null);
+                          localStorage.removeItem("authUser")
+                          navigate('/')
                         });
                       }}
                     >
@@ -114,7 +116,7 @@ function Navbar() {
             </div>
           )}
           <div className="flex items-center gap-3 mr-2">
-            {!user && <LoginModal />}
+            {!localStorage.getItem("authUser") && <LoginModal />}
             <button
               className="flex items-center px-3 py-1 uppercase border-4 border-blue-500 rounded-full cursor-pointer bg-slate-300"
               onClick={handleSell}

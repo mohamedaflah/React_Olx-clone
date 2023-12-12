@@ -18,7 +18,7 @@ function DefaultModalBody({setLogin}) {
           
           signInWithPopup(auth,provider).then((data)=>{
               console.log(data.user);
-              localStorage.setItem("username",data.user.displayName)
+              localStorage.setItem("authUser",JSON.stringify(data.user))
             //   navigate('/')
           })
         } catch (err) {
