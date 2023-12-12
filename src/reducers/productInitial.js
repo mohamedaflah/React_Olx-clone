@@ -4,6 +4,7 @@ const productInitialvalues={
     price:null,
     image:'',
     location:'',
-    name:''
+    name:'',
+    products:[]
 }
 export{productInitialvalues}

@@ -2,7 +2,7 @@ import { MdAddAPhoto } from "react-icons/md";
 import { indianStates } from "../handleFunctions/places";
 import { useContext, useEffect, useRef, useState } from "react";
 import { StateContext } from "../App";
-import { AuthenticationContext } from "../store/AuthContext";
+// import { AuthenticationContext } from "../store/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { PRODUCT_TYPE } from "../reducers/productrecuer";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -12,6 +12,8 @@ import {
   firestore,
   storage,
 } from "../config/firebaseconfig";
+// import { validateForm } from "../handleFunctions/validate";
+import Loader from "./Loader";
 // import PhotoIcon from '../assets/photo.svg'
 
 const Sell = () => {
@@ -22,39 +24,64 @@ const Sell = () => {
     }
   });
   const { product, setProduct } = useContext(StateContext);
-  const [imgState, setImageState] = useState("");
-  const { user } = useContext(AuthenticationContext);
+  const [imgState, setImageState] = useState();
+  //   const { user } = useContext(AuthenticationContext);
+  const [loader,setLoader]=useState(false)
   const titleErrRef = useRef();
   const descriptionErrRef = useRef();
   const priceRef = useRef();
   const imageRef = useRef();
   const locationRef = useRef();
-  const nameErr = useRef();
+  //   const nameErr = useRef();
   const { title, description, price, image, location, name } = product;
   const handleFormSubmiton = async () => {
-    alert(JSON.stringify(image));
-    const storageRef = ref(storage, `product/${+Date.now() + imgState}`);
-    uploadBytes(storageRef, image).then(async(snap)=>{
-        alert('uploaded a blob file');
-        const imageUrl = await getDownloadURL(storageRef);
-        console.log(imageUrl);
-        const productCollection = collection(firestore, "products");
-        await addDoc(productCollection, {
-          title,
-          description,
-          price,
-          image: imageUrl,
-          location,
-          name,
-          userId: JSON.parse(localStorage.getItem("authUser")).uid,
-          date: Date.now(),
+    if(title && description && price && image && location ){
+      
+    setLoader(true)
+    // if (validateForm(title, description, price, image, location, name)) {
+      const storageRef = ref(
+        storage,
+        `product/${
+          JSON.parse(localStorage.getItem("authUser")).uid + imgState.name
+        }`
+      );
+      uploadBytes(storageRef, imgState)
+        .then(async (snap) => {
+          console.log(JSON.stringify(snap));
+          const imageUrl = await getDownloadURL(storageRef);
+          console.log(imageUrl);
+          const productCollection = collection(firestore, "products");
+          await addDoc(productCollection, {
+            title,
+            description,
+            price,
+            image: imageUrl,
+            location,
+            name,
+            userId: JSON.parse(localStorage.getItem("authUser")).uid,
+            date: Date.now(),
+          });
+          setLoader(false)
+          navigate('/')
+        })
+        .catch((err) => {
+          alert(`err in uploding ${err}`);
         });
-    }).catch(err=>{
-        alert(`err in uploding ${err}`)
-    })
+    } else {
+      alert("fillout all fields");
+    }
+};
+const getButtonStyles = () => {
+    const isAllFilled =
+      title !== '' && name !== '' && description !== '' && location !== '' && image !== '' && price !== '';
+    return {
+      background: isAllFilled ? "#304c50" : "#d8dfe0",
+      color: isAllFilled ? "white" : "#7f9799",
+    };
   };
   return (
-    <div className="md:w-[80%]  mx-auto flex flex-col items-center mt-3">
+    <div className="md:w-[80%]  mx-auto flex flex-col items-center mt-3 ">
+        {loader && <Loader/>}
       <div className="flex items-center justify-center text-2xl font-semibold uppercase ">
         <h1 className="text=center">Post Your Add</h1>
       </div>
@@ -94,6 +121,10 @@ const Sell = () => {
                 } else {
                   titleErrRef.current.textContent = `Mention the key features of your item (e.g. brand, model, age,type)`;
                   titleErrRef.current.style.color = "#4e5353";
+                }
+                if (e.target.value.trim().length >= 70) {
+                  titleErrRef.current.textContent = "Maximum Limit reached";
+                  titleErrRef.current.style.color = "red";
                 }
               }}
             ></textarea>
@@ -176,12 +207,17 @@ const Sell = () => {
                     } else {
                       setProduct({ type: PRODUCT_TYPE.setPrice, payload: "" });
                     }
+                    if (e.target.value == "") {
+                      priceRef.current.textContent = "This field is mandatory";
+                      priceRef.style.color = "#4e5353";
+                    }
                     if (Number(e.target.value) <= 0) {
                       priceRef.current.textContent =
                         "Enter only postiive values";
                       priceRef.current.style.color = "red";
                     } else {
-                      priceRef.current.textContent = "";
+                      priceRef.current.textContent = "Ok";
+                      priceRef.style.color = "#4e5353";
                     }
                   }}
                 />
@@ -216,7 +252,7 @@ const Sell = () => {
                 className="hidden"
                 id="image1"
                 onChange={(e) => {
-                  setImageState(e.target.files[0].name);
+                  setImageState(e.target.files[0]);
                   setProduct({
                     type: PRODUCT_TYPE.setImage,
                     payload: URL.createObjectURL(e.target.files[0]),
@@ -247,7 +283,7 @@ const Sell = () => {
                 <select
                   name=""
                   id=""
-                  className="w-full h-full p-1 bg-transparent"
+                  className="w-full h-full p-1 bg-transparent border-none outline-none"
                   onChange={(e) =>
                     setProduct({
                       type: PRODUCT_TYPE.setLocation,
@@ -280,7 +316,9 @@ const Sell = () => {
           </div>
           <div className="flex flex-col justify-center mt-2">
             <div className="flex gap-4">
-              <div className="w-24 h-24 border rounded-full"></div>
+              <div className="w-24 h-24 overflow-hidden border rounded-full">
+                <img src={JSON.parse(localStorage.getItem("authUser")).photoURL} alt="" className="w-full h-auto" />
+              </div>
               <div className="flex flex-col h-28 ">
                 <label htmlFor="">Name</label>
                 <input
@@ -302,8 +340,8 @@ const Sell = () => {
         <div className="py-5 px-7 border-b border-b-[#e0dfdf]">
           <div>
             <button
-              className="p-3  bg-[#d8dfe0] rounded-md font-bold text-[#7f9799]"
-              style={{}}
+              className="p-3 font-bold rounded-md"
+              style={getButtonStyles()}
               onClick={handleFormSubmiton}
             >
               Post now

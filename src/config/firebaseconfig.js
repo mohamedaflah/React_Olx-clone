@@ -8,6 +8,7 @@ import {
   collection,
   addDoc,
   serverTimestamp,
+  getDocs,
 } from "firebase/firestore";
 
 // const firebaseConfig = {
@@ -45,6 +46,7 @@ export {
   getDownloadURL,
   getFirestore,
   collection,
+  getDocs,
   addDoc,
   serverTimestamp,
   storage,

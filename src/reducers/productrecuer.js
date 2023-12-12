@@ -5,6 +5,7 @@ const PRODUCT_TYPE = {
   setImage: "setImage",
   setLocation: "setState",
   setName: "setName",
+  setProducts:"setProducts"
 };
 const reducerforProducts = (state, action) => {
   switch (action.type) {
@@ -38,6 +39,11 @@ const reducerforProducts = (state, action) => {
         ...state,
         location: action.payload,
       };
+      case PRODUCT_TYPE.setProducts:
+        return{
+          ...state,
+          products:action.payload
+        }
   }
 };
 export  { reducerforProducts };
