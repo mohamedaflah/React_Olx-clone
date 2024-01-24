@@ -1,17 +1,16 @@
-
-import { useContext, useEffect, useState } from "react";
-import Card from "./Card";
+/* eslint-disable react-refresh/only-export-components */
+import { Suspense, lazy, memo, useContext, useEffect, useState } from "react";
 import { StateContext } from "../App";
 import { auth, collection, firestore, getDocs } from "../config/firebaseconfig";
 import { PRODUCT_TYPE } from "../reducers/productrecuer";
 import { onAuthStateChanged } from "firebase/auth";
 import { AuthenticationContext } from "../store/AuthContext";
 import Loader from "./Loader";
-
+const Card = lazy(() => import("./Card"));
 const Cards = () => {
-  const [loader,setLoader]=useState(false)
-  const {setProduct}=useContext(StateContext)
-  const {setUser}=useContext(AuthenticationContext)
+  const [loader, setLoader] = useState(false);
+  const { setProduct } = useContext(StateContext);
+  const { setUser } = useContext(AuthenticationContext);
   useEffect(() => {
     setLoader(true);
     getDocs(collection(firestore, "products")).then((data) => {
@@ -31,18 +30,25 @@ const Cards = () => {
         localStorage.removeItem("authUser", JSON.stringify(user));
         setUser(null);
       }
-      setLoader(false)
+      setLoader(false);
     });
   }, []);
-  const {product}=useContext(StateContext)
-  const {products}=product
+  const { product } = useContext(StateContext);
+  const { products } = product;
   return (
-    <div className="flex flex-wrap  w-[90%] md:w-[95%] lg:w-[83%] mx-auto justify-e gap-3 mt-5 px-2">
-      {loader&&<Loader/>}
-      {products.map((data)=>(
-          <Card key={data.id} description={data.description} image={data.image} price={data.price}/>
-      ))}
+    <div className="flex flex-wrap  w-[90%] md:w-[95%] lg:w-[90%] mx-auto justify-e gap-3 mt-5 px-2">
+      {loader && <Loader />}
+      <Suspense fallback={<Loader/>}>
+        {products.map((data) => (
+          <Card
+            key={data.id}
+            description={data.description}
+            image={data.image}
+            price={data.price}
+          />
+        ))}
+      </Suspense>
     </div>
   );
 };
-export default Cards;
+export default memo(Cards);

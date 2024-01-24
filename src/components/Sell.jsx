@@ -73,10 +73,12 @@ const Sell = () => {
 };
 const getButtonStyles = () => {
     const isAllFilled =
-      title !== '' && name !== '' && description !== '' && location !== '' && image !== '' && price !== '';
+      title !== ''  && description !== '' && location !== '' && image !== '' && price !== '';
     return {
       background: isAllFilled ? "#304c50" : "#d8dfe0",
       color: isAllFilled ? "white" : "#7f9799",
+      cursor:isAllFilled?"pointer":"no-drop",
+      pointerEvents:!isAllFilled&&"none"
     };
   };
   return (
